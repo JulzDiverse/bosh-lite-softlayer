@@ -16,7 +16,7 @@
 Navigate to the `bosh-deployment` repository. 
 
 ```
-bosh2 create-env bosh.yml \
+bosh create-env bosh.yml \
   -o jumpbox-user.yml \
   -o softlayer/cpi-dynamic.yml \
   -o bosh-lite.yml \
@@ -39,15 +39,15 @@ _add-hosts-entry.yml_ is required to enable bosh-ssh. (TODO: PR this into bosh-d
 
 2. Set Alias
 
-`$ bosh -e <internal_ip> --ca-cert <(bosh2 int ./creds.yml --path /director_ssl/ca) alias-env <your-alias>`
+`$ bosh -e <internal_ip> --ca-cert <(bosh int ./creds.yml --path /director_ssl/ca) alias-env <your-alias>`
 
 3. Bosh Auth
 
-`$ export BOSH_CLIENT=admin  && export BOSH_CLIENT_SECRET=`bosh2 int ./creds.yml --path /admin_password`
+`$ export BOSH_CLIENT=admin  && export BOSH_CLIENT_SECRET=`bosh int ./creds.yml --path /admin_password`
 
 or
 
-`$ bosh login --environment <bosh-alias> --client=admin --client-secret=`bosh2 int ./creds.yml --path /admin_password`
+`$ bosh login --environment <bosh-alias> --client=admin --client-secret=$(bosh int ./creds.yml --path /admin_password)`
 
 ---
 
@@ -68,7 +68,7 @@ e.g.
 3. Deploy CF
 
 ```
-bosh2 -e <your-alias> deploy -d cf ./cf-deployment.yml \
+bosh -e <your-alias> deploy -d cf ./cf-deployment.yml \
     --vars-store deployment-vars.yml \
     -o ./operations/use-compiled-releases.yml \
     -o ./operations/bosh-lite.yml \
@@ -91,7 +91,7 @@ bosh2 -e <your-alias> deploy -d cf ./cf-deployment.yml \
 
 Navigate to `cf-deployment`
 
-`$ cf auth admin $(bosh2 int ./deployment-vars.yml --path /cf_admin_password)`
+`$ cf auth admin $(bosh int ./deployment-vars.yml --path /cf_admin_password)`
 
 ## Bosh SSH
 
@@ -111,6 +111,6 @@ Navigate to `bosh-deployment`
 
 4. ssh to a component
 
-`$ BOSH_ALL_PROXY=socks5://localhost:5000 bosh2 -e <your-alias> -d cf ssh <instance>`
+`$ BOSH_ALL_PROXY=socks5://localhost:5000 bosh -e <your-alias> -d cf ssh <instance>`
 
 (*note that <internal_ip> is the property you defined when used bosh `create-env` command)
